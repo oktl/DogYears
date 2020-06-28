@@ -136,7 +136,7 @@ def convert_to_months(age):
     Returns
     -------
     years and months : tuple
-        **
+        tuple ordered by years then months
     '''
     months, years = math.modf(age)
     months = months * 12  # Convert decimal.
@@ -152,15 +152,15 @@ def calculate_dog_years(dog_size, human_years, human_months):
 
     Parameters
     ----------
-    dog_size : string
+     dog_size : string
         General size of dog from SIZES dictionary.
-   human_years : int
+     human_years : int
         Number of human years from dog's birthdate unitl today.
-    human_months : int
+     human_months : int
         Number of additional months from last birthday.
     Returns
     -------
-    dog_age : tuple
+     dog_age : tuple
        Years and months calculated using AKC age factors.
 
     '''
