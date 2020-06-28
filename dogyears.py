@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-Updated on Fri Jun 26, 2020
+Updated on Sat Jun 27, 2020
 
 @author: oktl
+
+First Python project.
+
+Just messing with Python and PySimpleGUI, trying different things.
+It's a mishmash, learning how to do things in Python and then
+presenting that in the GUI.
 
 Dogs don't age at the same rate as humans. Historically the ratio has
 been 7:1 - 7 dog years to 1 human year. The American Kennel Club(AKC)
 has studied dog aging and come up with new information. They found that
 dogs age much more rapidly in the first two years and then slow down
 some.  They also discovered that the general size and weight of the dog
-has a factor in aging.
+has a factor in aging. My daughter mentioned that her puppy had it's
+one year birthday and I told her that he was no longer a child but a teenager.
 
 This script takes a dog's birth date, gets the number of human years plus
 months the dog has been alive today and converts that to dog years.
-The script started out of curiosity as I was teaching myself Python.
-My daughter mentioned that her puppy had it's one year birthday and I
-told her that he was no longer a child but a teenager.
 
 """
 
@@ -236,7 +240,7 @@ layout = [
 window = sg.Window('Dog Years', layout, auto_size_buttons=False,
                    default_button_element_size=(10, 1), font='Calibri 14',
                    element_justification="center", return_keyboard_events=True)
-window.SetIcon("dog2.ico")
+window.SetIcon("Resources\dog.ico")
 about_window_active = False
 
 while True:  # Event Loop
