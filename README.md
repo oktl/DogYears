@@ -22,7 +22,6 @@ in dog age.
 The script takes a dog's birth date, gets the number of human years and
 months the dog has been alive today and converts that to dog years.
 
-It looks like this:
-![Image of GUI])https://github.com/oktl/DogYears/blob/master/lookslikethis.JPG)
+![Image of GUI](https://github.com/oktl/DogYears/blob/master/lookslikethis.JPG)
 
 
