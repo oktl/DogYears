@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Updated on Sat Jun 27, 2020
+Updated on Fri Ju 3, 2020
 
 @author: oktl
 
@@ -14,14 +14,15 @@ Dogs don't age at the same rate as humans. Historically the ratio has
 been 7:1 - 7 dog years to 1 human year. The American Kennel Club(AKC)
 has studied dog aging and come up with new information. They found that
 dogs age much more rapidly in the first two years and then slow down
-some.  They also discovered that the general size and weight of the dog
-has a factor in aging. My daughter mentioned that her puppy had it's
-one year birthday and I told her that he was no longer a child but a teenager.
+some.  They also discovered that the size and weight of the dog
+has a factor in aging.
 
 This script takes a dog's birth date, gets the number of human years plus
 months the dog has been alive today and converts that to dog years.
 
 """
+
+VERSION = 1.0
 
 import PySimpleGUI as sg
 from datetime import date
@@ -41,7 +42,8 @@ LARGE = {0: 0, 1: 15, 2: 24, 3: 28, 4: 32, 5: 36, 6: 45, 7: 50, 8: 55,
          9: 61, 10: 66, 11: 72, 12: 77, 13: 82, 14: 88, 15: 93, 16: 99}
 GIANT = {0: 0, 1: 12, 2: 22, 3: 31, 4: 38, 5: 45, 6: 49, 7: 56, 8: 64,
          9: 71, 10: 79, 11: 86, 12: 93, 13: 100, 14: 107, 15: 114, 16: 121}
-# AKC classifies dogs by general size determined by weight.
+
+# AKC classifies 4 dog sizes determined by weight.
 # Small <= 20 lbs, Medium > 20 to <= 50 lbs, Large > 50 to <=100 lbs,
 # Giant > 100 lbs.
 SIZES = {'-SMALL-': SMALL, '-MEDIUM-': MEDIUM, '-LARGE-': LARGE, '-GIANT-': GIANT}
@@ -53,7 +55,8 @@ average_age_factor = {'-SMALL-': 0.33, '-MEDIUM-': 0.38, '-LARGE-': 0.45, '-GIAN
 
 keys_to_clear = ['-BIRTHDATE-', '-HUMAN_YEARS-', '-DOG_YEARS-']
 
-about_text = ('Dogs do not age at the same  as humans.\n'
+about_text = (f'Dog Years Version {VERSION} \n\n'
+              'Dogs do not age at the same  as humans.\n'
               'Historically, the ratio has been 7 to 1,\n'
               '7 dog years to 1 human year.\n'
               'The American Kennel Club (AKC) has studied dog\n'
@@ -68,7 +71,7 @@ about_text = ('Dogs do not age at the same  as humans.\n'
               'Large - 51 to 100 pounds\n'
               'Giant - over 100 pounds.\n\n'
               'This app takes a date and calculates the number\n'
-              "of years and months a dog is using the AKC's data.\n\n")
+              "of years and months a dog is using the AKC's data.\n")
 
 help_text = ('Help, I need somebody\n'
              'Help, not just anybody\n'
@@ -193,6 +196,7 @@ def info_window(title, text):
 
     window = sg.Window(title, layout, no_titlebar=False,
                        text_justification='c', element_justification='c')
+    window.SetIcon("Resources\dog.ico")
     event, values = window.read()
     window.close()
 
@@ -210,7 +214,7 @@ def output_frame(title, key):
 # Make it whatever you want.
 # sg.theme('DarkTeal10')
 sg.theme('BrownBlue')
-sg.set_options(tooltip_font=('Calibri 12'))
+sg.set_options(tooltip_font='Calibri 12')
 
 # Opens a debug window, delete this before making an .exe file
 # sg.Print('This is the first line printed', do_not_reroute_stdout=False)
@@ -230,18 +234,18 @@ layout = [
         title="Pick your dog'size", title_location=sg.TITLE_LOCATION_TOP,
         relief=sg.RELIEF_SUNKEN, key='-SIZE-', font='Calibri 12')],
     [sg.Txt('Pick Date')],
-    [sg.CalendarButton('Date', target=('-BIRTHDATE-'), size=(11, 1),
+    [sg.CalendarButton('Date', target='-BIRTHDATE-', size=(11, 1),
                        font='Calibri 11', focus=False)],
-    [sg.In(size=(9, 1), background_color='LightSkyBlue4', key='-BIRTHDATE-')],
+    [sg.In(size=(9, 1), key='-BIRTHDATE-')],
     output_frame('Human Age', '-HUMAN_YEARS-'),
     output_frame('Dog Age', '-DOG_YEARS-'),
     [sg.B('Show', bind_return_key=True), sg.B('Clear'), sg.B('Exit')]]
 
 window = sg.Window('Dog Years', layout, auto_size_buttons=False,
                    default_button_element_size=(10, 1), font='Calibri 14',
-                   element_justification="center", return_keyboard_events=True)
+                   element_justification='center', return_keyboard_events=True)
+
 window.SetIcon("Resources\dog.ico")
-about_window_active = False
 
 while True:  # Event Loop
     event, values = window.read()
@@ -253,41 +257,38 @@ while True:  # Event Loop
         if event == 'Show':
             print(f' This should be the Show event: {event}')
             empty_input = check_inputs()
-            if empty_input:
-                sg.popup_error(f'ValueError\nThere are empty entries:\n{empty_input}',
-                               font=('Calibri', 14), no_titlebar=True,
-                               text_color='orange')
-            else:
-                # Get the key that matches the value 'True' from the radio buttons.
-                true_value = {key: value for (key, value) in values.items() if value is True}
-                size = [*true_value]  # unpack the new dict to a list- PEP 448
-                str_size = ''.join(size)  # Get a string from the list.
-                bdate = values.get('-BIRTHDATE-')
-                birthdate = datetime.strptime(bdate, '%Y-%m-%d %H:%M:%S').date()
-                today = date.today()
 
-                human_age = relativedelta(today, birthdate)
-                human_years = human_age.years
-                human_months = human_age.months
-                dogs_age = calculate_dog_years(str_size, human_years, human_months)
+            # Get the key that matches the value 'True' from the radio buttons.
+            true_value = {key: value for (key, value) in values.items() if value is True}
+            size = [*true_value]  # unpack the new dict to a list- PEP 448
+            str_size = ''.join(size)  # Get a string from the list.
+            bdate = values.get('-BIRTHDATE-')
+            birthdate = datetime.strptime(bdate, '%Y-%m-%d %H:%M:%S').date()
+            today = date.today()
 
-                # Update the output
-                window['-HUMAN_YEARS-'].update(f'{human_years} years, {human_months} months')
-                window['-DOG_YEARS-'].update(f'{dogs_age[0]} years, {dogs_age[1]} months')
+            human_age = relativedelta(today, birthdate)
+            human_years = human_age.years
+            human_months = human_age.months
+            dogs_age = calculate_dog_years(str_size, human_years, human_months)
+
+            # Update the output
+            window['-HUMAN_YEARS-'].update(f'{human_years} years, {human_months} months')
+            window['-DOG_YEARS-'].update(f'{dogs_age[0]} years, {dogs_age[1]} months')
 
     except ValueError:  # this does nothing
-        sg.Popup('ValueError\nCheck empty entries.')
+        sg.Popup(f'ValueError\nEmpty entry:  {empty_input}')
 
+    # Use the About menu item or press F2.
     if event == 'About...' or event == 'F2:113':
         window.disappear()
         info_window('About', about_text)
         window.reappear()
-
+    # Use the menu item or press F1.
     if event == 'Help' or event == 'F1:112':
         window.disappear()
         info_window('Help', help_text)
         window.reappear()
-
+    # Click the Clear button or press the Delete key
     if event == 'Clear' or event == 'Delete:46':
         print('Calling Clear')
         values.clear()
